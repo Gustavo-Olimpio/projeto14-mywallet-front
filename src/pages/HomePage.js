@@ -1,50 +1,98 @@
 import styled from "styled-components"
 import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
+import { useState , useEffect } from 'react';
+import axios from 'axios';
+import {useNavigate } from "react-router-dom"
+
 
 export default function HomePage() {
+  const [info, setInfo] = useState([])
+  
+  const navigate = useNavigate();
+  
+  
+  useEffect(() => {
+    if (!localStorage.getItem("token")){
+      navigate("/");
+      
+    }
+    
+		const requisicao = axios.get("http://localhost:5000/home",{headers:{"Authorization":localStorage.getItem("token")}});
+
+		requisicao.then(resposta => {
+      setInfo(resposta.data)
+      
+      
+		});
+	}, []);
+  
+  function deslogar(){
+    localStorage.removeItem("token");
+    localStorage.removeItem("nome");
+    navigate("/");
+  }
+  
+  function saldo(){
+   let positivo = 0
+   let negativo = 0
+    for(let i = 0; i<info.length;i++){
+      if(info[i].tipo === "entrada"){
+        positivo+=Number(info[i].valor)
+      } else {
+        negativo+=Number(info[i].valor)
+      }
+    }
+    
+    return (positivo-negativo).toFixed(2)
+  }
+  
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, Fulano</h1>
-        <BiExit />
+        <h1>Ola, {localStorage.getItem("nome")}</h1>
+        <BiExit onClick={deslogar} />
       </Header>
 
       <TransactionsContainer>
         <ul>
-          <ListItemContainer>
-            <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
-            </div>
-            <Value color={"negativo"}>120,00</Value>
-          </ListItemContainer>
 
-          <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
+          {(info.length === 0)? <p>Não há registros de <br />
+        entrada ou saída</p>: info.map((a) => <ListItemContainer key={a._id}>
+         <div>
+              <span>{a.data}</span>
+              <strong>{a.descricao}</strong>
             </div>
-            <Value color={"positivo"}>3000,00</Value>
-          </ListItemContainer>
+            <Value color={(a.tipo === "entrada")? "positivo" : "negativo"}>{Number(a.valor).toFixed(2)}</Value>
+         </ListItemContainer>)}
+
+         
         </ul>
-
+        {(info.length === 0)? <p></p>:
         <article>
           <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
+          <Value color={(saldo()>= 0)? "positivo" : "negativo"}>{saldo()}</Value>
         </article>
+        }
       </TransactionsContainer>
 
 
       <ButtonsContainer>
-        <button>
-          <AiOutlinePlusCircle />
-          <p>Nova <br /> entrada</p>
+      
+        <button onClick={() => navigate("/nova-transacao/entrada")}>
+          
+            <AiOutlinePlusCircle />
+            <p>Nova <br /> entrada</p>
+          
         </button>
-        <button>
-          <AiOutlineMinusCircle />
-          <p>Nova <br />saída</p>
+        
+        <button onClick={() => navigate("/nova-transacao/saida")}>
+         
+            <AiOutlineMinusCircle />
+            <p>Nova <br />saída</p>
+            
         </button>
+       
       </ButtonsContainer>
 
     </HomeContainer>
@@ -74,9 +122,27 @@ const TransactionsContainer = styled.article`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow-y: scroll;
+  p{
+  color: #868686;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 55%;
+  }
   article {
+    height:22px;
+    width: 76vw;
+    background-color: #fff;
+    z-index: 1;
+    position: fixed;
+    bottom: 155px;
     display: flex;
-    justify-content: space-between;   
+    justify-content: space-between;
+    strong {
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+      
     strong {
       font-weight: 700;
       text-transform: uppercase;
