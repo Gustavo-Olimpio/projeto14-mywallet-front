@@ -8,7 +8,7 @@ import {useNavigate } from "react-router-dom"
 
 export default function HomePage() {
   const [info, setInfo] = useState([])
-  const url = process.env.REACT_APP_API
+  const url = process.env.REACT_APP_BD
   const navigate = useNavigate();
   
   

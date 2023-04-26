@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useState } from "react"
 
 export default function SignInPage() {
-  const url = process.env.REACT_APP_API
+  const url = process.env.REACT_APP_BD
   const [login, setLogin] = useState({email:"",password:""})
   const navigate = useNavigate();
   function logar(e){

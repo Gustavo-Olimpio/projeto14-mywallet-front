@@ -5,7 +5,7 @@ import { useParams ,  useNavigate  } from 'react-router-dom';
 
 
 export default function TransactionsPage() {
-  const url = process.env.REACT_APP_API
+  const url = process.env.REACT_APP_BD
   const [transacao, setTransacao] = useState({valor:"",descricao:""})
   const params = useParams();
   const navigate = useNavigate();

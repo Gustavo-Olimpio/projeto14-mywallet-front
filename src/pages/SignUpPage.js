@@ -11,7 +11,7 @@ export default function SignUpPage() {
   const [confirm,setConfirm] = useState()
 
   function cadastrar(e){
-    const url = process.env.REACT_APP_API
+    const url = process.env.REACT_APP_BD
     e.preventDefault();
     if (cadastro.password !== confirm){
       alert("Senha incorreta, tente novamente")
