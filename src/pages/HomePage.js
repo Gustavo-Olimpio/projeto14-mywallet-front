@@ -8,7 +8,7 @@ import {useNavigate } from "react-router-dom"
 
 export default function HomePage() {
   const [info, setInfo] = useState([])
-  
+  const url = process.env.REACT_APP_API
   const navigate = useNavigate();
   
   
@@ -18,7 +18,7 @@ export default function HomePage() {
       
     }
     
-		const requisicao = axios.get("http://localhost:5000/home",{headers:{"Authorization":localStorage.getItem("token")}});
+		const requisicao = axios.get(`${url}/home`,{headers:{"Authorization":localStorage.getItem("token")}});
 
 		requisicao.then(resposta => {
       setInfo(resposta.data)

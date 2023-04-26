@@ -5,11 +5,12 @@ import axios from 'axios'
 import { useState } from "react"
 
 export default function SignInPage() {
+  const url = process.env.REACT_APP_API
   const [login, setLogin] = useState({email:"",password:""})
   const navigate = useNavigate();
   function logar(e){
     e.preventDefault();
-    const promessa = axios.post('http://localhost:5000/', login);
+    const promessa = axios.post(`${url}/`, login);
   
         promessa.then((res) =>{
           alert("Login efetuado");

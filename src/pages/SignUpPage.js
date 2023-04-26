@@ -11,11 +11,12 @@ export default function SignUpPage() {
   const [confirm,setConfirm] = useState()
 
   function cadastrar(e){
+    const url = process.env.REACT_APP_API
     e.preventDefault();
     if (cadastro.password !== confirm){
       alert("Senha incorreta, tente novamente")
     } else {
-      const promessa = axios.post('http://localhost:5000/cadastro', cadastro);
+      const promessa = axios.post(`${url}/cadastro`, cadastro);
 
       promessa.then(() =>{
         alert("Usuário cadastrado com sucesso!");

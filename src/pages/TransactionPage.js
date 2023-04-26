@@ -5,6 +5,7 @@ import { useParams ,  useNavigate  } from 'react-router-dom';
 
 
 export default function TransactionsPage() {
+  const url = process.env.REACT_APP_API
   const [transacao, setTransacao] = useState({valor:"",descricao:""})
   const params = useParams();
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function TransactionsPage() {
   
   function listar(e){
     e.preventDefault();
-    const promessa = axios.post(`http://localhost:5000/nova-transacao/${params.tipo}`, transacao, {headers:{"Authorization":localStorage.getItem("token")}});
+    const promessa = axios.post(`${url}/nova-transacao/${params.tipo}`, transacao, {headers:{"Authorization":localStorage.getItem("token")}});
 
       promessa.then(() =>{
         alert("Item cadastrado com sucesso");
